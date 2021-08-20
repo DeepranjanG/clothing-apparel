@@ -33,7 +33,7 @@ import PIL.ImageFont as ImageFont
 import six
 import tensorflow as tf
 
-# from object_detection.core import standard_fields as fields
+# from research.object_detection.core import standard_fields as fields
 from research.object_detection.utils import shape_utils
 
 _TITLE_LEFT_MARGIN = 10
@@ -459,81 +459,81 @@ def draw_side_by_side_evaluation_image(eval_dict,
       corresponds to detections, while the subimage on the right corresponds to
       groundtruth.
   """
-  detection_fields = fields.DetectionResultFields()
-  input_data_fields = fields.InputDataFields()
+  # detection_fields = fields.DetectionResultFields()
+  # input_data_fields = fields.InputDataFields()
 
-  images_with_detections_list = []
+  # images_with_detections_list = []
 
-  # Add the batch dimension if the eval_dict is for single example.
-  if len(eval_dict[detection_fields.detection_classes].shape) == 1:
-    for key in eval_dict:
-      if key != input_data_fields.original_image:
-        eval_dict[key] = tf.expand_dims(eval_dict[key], 0)
+  # # Add the batch dimension if the eval_dict is for single example.
+  # if len(eval_dict[detection_fields.detection_classes].shape) == 1:
+  #   for key in eval_dict:
+  #     if key != input_data_fields.original_image:
+  #       eval_dict[key] = tf.expand_dims(eval_dict[key], 0)
 
-  for indx in range(eval_dict[input_data_fields.original_image].shape[0]):
-    instance_masks = None
-    if detection_fields.detection_masks in eval_dict:
-      instance_masks = tf.cast(
-          tf.expand_dims(
-              eval_dict[detection_fields.detection_masks][indx], axis=0),
-          tf.uint8)
-    keypoints = None
-    if detection_fields.detection_keypoints in eval_dict:
-      keypoints = tf.expand_dims(
-          eval_dict[detection_fields.detection_keypoints][indx], axis=0)
-    groundtruth_instance_masks = None
-    if input_data_fields.groundtruth_instance_masks in eval_dict:
-      groundtruth_instance_masks = tf.cast(
-          tf.expand_dims(
-              eval_dict[input_data_fields.groundtruth_instance_masks][indx],
-              axis=0), tf.uint8)
+  # for indx in range(eval_dict[input_data_fields.original_image].shape[0]):
+  #   instance_masks = None
+  #   if detection_fields.detection_masks in eval_dict:
+  #     instance_masks = tf.cast(
+  #         tf.expand_dims(
+  #             eval_dict[detection_fields.detection_masks][indx], axis=0),
+  #         tf.uint8)
+  #   keypoints = None
+  #   if detection_fields.detection_keypoints in eval_dict:
+  #     keypoints = tf.expand_dims(
+  #         eval_dict[detection_fields.detection_keypoints][indx], axis=0)
+  #   groundtruth_instance_masks = None
+  #   if input_data_fields.groundtruth_instance_masks in eval_dict:
+  #     groundtruth_instance_masks = tf.cast(
+  #         tf.expand_dims(
+  #             eval_dict[input_data_fields.groundtruth_instance_masks][indx],
+  #             axis=0), tf.uint8)
 
-    images_with_detections = draw_bounding_boxes_on_image_tensors(
-        tf.expand_dims(
-            eval_dict[input_data_fields.original_image][indx], axis=0),
-        tf.expand_dims(
-            eval_dict[detection_fields.detection_boxes][indx], axis=0),
-        tf.expand_dims(
-            eval_dict[detection_fields.detection_classes][indx], axis=0),
-        tf.expand_dims(
-            eval_dict[detection_fields.detection_scores][indx], axis=0),
-        category_index,
-        original_image_spatial_shape=tf.expand_dims(
-            eval_dict[input_data_fields.original_image_spatial_shape][indx],
-            axis=0),
-        true_image_shape=tf.expand_dims(
-            eval_dict[input_data_fields.true_image_shape][indx], axis=0),
-        instance_masks=instance_masks,
-        keypoints=keypoints,
-        max_boxes_to_draw=max_boxes_to_draw,
-        min_score_thresh=min_score_thresh,
-        use_normalized_coordinates=use_normalized_coordinates)
-    images_with_groundtruth = draw_bounding_boxes_on_image_tensors(
-        tf.expand_dims(
-            eval_dict[input_data_fields.original_image][indx], axis=0),
-        tf.expand_dims(
-            eval_dict[input_data_fields.groundtruth_boxes][indx], axis=0),
-        tf.expand_dims(
-            eval_dict[input_data_fields.groundtruth_classes][indx], axis=0),
-        tf.expand_dims(
-            tf.ones_like(
-                eval_dict[input_data_fields.groundtruth_classes][indx],
-                dtype=tf.float32),
-            axis=0),
-        category_index,
-        original_image_spatial_shape=tf.expand_dims(
-            eval_dict[input_data_fields.original_image_spatial_shape][indx],
-            axis=0),
-        true_image_shape=tf.expand_dims(
-            eval_dict[input_data_fields.true_image_shape][indx], axis=0),
-        instance_masks=groundtruth_instance_masks,
-        keypoints=None,
-        max_boxes_to_draw=None,
-        min_score_thresh=0.0,
-        use_normalized_coordinates=use_normalized_coordinates)
-    images_with_detections_list.append(
-        tf.concat([images_with_detections, images_with_groundtruth], axis=2))
-  return images_with_detections_list
+  #   images_with_detections = draw_bounding_boxes_on_image_tensors(
+  #       tf.expand_dims(
+  #           eval_dict[input_data_fields.original_image][indx], axis=0),
+  #       tf.expand_dims(
+  #           eval_dict[detection_fields.detection_boxes][indx], axis=0),
+  #       tf.expand_dims(
+  #           eval_dict[detection_fields.detection_classes][indx], axis=0),
+  #       tf.expand_dims(
+  #           eval_dict[detection_fields.detection_scores][indx], axis=0),
+  #       category_index,
+  #       original_image_spatial_shape=tf.expand_dims(
+  #           eval_dict[input_data_fields.original_image_spatial_shape][indx],
+  #           axis=0),
+  #       true_image_shape=tf.expand_dims(
+  #           eval_dict[input_data_fields.true_image_shape][indx], axis=0),
+  #       instance_masks=instance_masks,
+  #       keypoints=keypoints,
+  #       max_boxes_to_draw=max_boxes_to_draw,
+  #       min_score_thresh=min_score_thresh,
+  #       use_normalized_coordinates=use_normalized_coordinates)
+  #   images_with_groundtruth = draw_bounding_boxes_on_image_tensors(
+  #       tf.expand_dims(
+  #           eval_dict[input_data_fields.original_image][indx], axis=0),
+  #       tf.expand_dims(
+  #           eval_dict[input_data_fields.groundtruth_boxes][indx], axis=0),
+  #       tf.expand_dims(
+  #           eval_dict[input_data_fields.groundtruth_classes][indx], axis=0),
+  #       tf.expand_dims(
+  #           tf.ones_like(
+  #               eval_dict[input_data_fields.groundtruth_classes][indx],
+  #               dtype=tf.float32),
+  #           axis=0),
+  #       category_index,
+  #       original_image_spatial_shape=tf.expand_dims(
+  #           eval_dict[input_data_fields.original_image_spatial_shape][indx],
+  #           axis=0),
+  #       true_image_shape=tf.expand_dims(
+  #           eval_dict[input_data_fields.true_image_shape][indx], axis=0),
+  #       instance_masks=groundtruth_instance_masks,
+  #       keypoints=None,
+  #       max_boxes_to_draw=None,
+  #       min_score_thresh=0.0,
+  #       use_normalized_coordinates=use_normalized_coordinates)
+  #   images_with_detections_list.append(
+  #       tf.concat([images_with_detections, images_with_groundtruth], axis=2))
+  # return images_with_detections_list
 
 
 def draw_keypoints_on_image_array(image,
