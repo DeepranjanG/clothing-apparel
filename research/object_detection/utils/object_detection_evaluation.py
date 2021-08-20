@@ -35,7 +35,7 @@ import unicodedata
 import numpy as np
 import tensorflow as tf
 
-from object_detection.core import standard_fields
+# from object_detection.core import standard_fields
 from object_detection.utils import label_map_util
 from object_detection.utils import metrics
 from object_detection.utils import per_image_evaluation
@@ -120,108 +120,108 @@ class DetectionEvaluator(object):
     pass
 
 
-class ObjectDetectionEvaluator(DetectionEvaluator):
-  """A class to evaluate detections."""
+# class ObjectDetectionEvaluator(DetectionEvaluator):
+#   """A class to evaluate detections."""
 
-  def __init__(self,
-               categories,
-               matching_iou_threshold=0.5,
-               evaluate_corlocs=False,
-               evaluate_precision_recall=False,
-               metric_prefix=None,
-               use_weighted_mean_ap=False,
-               evaluate_masks=False,
-               group_of_weight=0.0):
-    """Constructor.
+#   def __init__(self,
+#                categories,
+#                matching_iou_threshold=0.5,
+#                evaluate_corlocs=False,
+#                evaluate_precision_recall=False,
+#                metric_prefix=None,
+#                use_weighted_mean_ap=False,
+#                evaluate_masks=False,
+#                group_of_weight=0.0):
+#     """Constructor.
 
-    Args:
-      categories: A list of dicts, each of which has the following keys -
-        'id': (required) an integer id uniquely identifying this category.
-        'name': (required) string representing category name e.g., 'cat', 'dog'.
-      matching_iou_threshold: IOU threshold to use for matching groundtruth
-        boxes to detection boxes.
-      evaluate_corlocs: (optional) boolean which determines if corloc scores
-        are to be returned or not.
-      evaluate_precision_recall: (optional) boolean which determines if
-        precision and recall values are to be returned or not.
-      metric_prefix: (optional) string prefix for metric name; if None, no
-        prefix is used.
-      use_weighted_mean_ap: (optional) boolean which determines if the mean
-        average precision is computed directly from the scores and tp_fp_labels
-        of all classes.
-      evaluate_masks: If False, evaluation will be performed based on boxes.
-        If True, mask evaluation will be performed instead.
-      group_of_weight: Weight of group-of boxes.If set to 0, detections of the
-        correct class within a group-of box are ignored. If weight is > 0, then
-        if at least one detection falls within a group-of box with
-        matching_iou_threshold, weight group_of_weight is added to true
-        positives. Consequently, if no detection falls within a group-of box,
-        weight group_of_weight is added to false negatives.
+#     Args:
+#       categories: A list of dicts, each of which has the following keys -
+#         'id': (required) an integer id uniquely identifying this category.
+#         'name': (required) string representing category name e.g., 'cat', 'dog'.
+#       matching_iou_threshold: IOU threshold to use for matching groundtruth
+#         boxes to detection boxes.
+#       evaluate_corlocs: (optional) boolean which determines if corloc scores
+#         are to be returned or not.
+#       evaluate_precision_recall: (optional) boolean which determines if
+#         precision and recall values are to be returned or not.
+#       metric_prefix: (optional) string prefix for metric name; if None, no
+#         prefix is used.
+#       use_weighted_mean_ap: (optional) boolean which determines if the mean
+#         average precision is computed directly from the scores and tp_fp_labels
+#         of all classes.
+#       evaluate_masks: If False, evaluation will be performed based on boxes.
+#         If True, mask evaluation will be performed instead.
+#       group_of_weight: Weight of group-of boxes.If set to 0, detections of the
+#         correct class within a group-of box are ignored. If weight is > 0, then
+#         if at least one detection falls within a group-of box with
+#         matching_iou_threshold, weight group_of_weight is added to true
+#         positives. Consequently, if no detection falls within a group-of box,
+#         weight group_of_weight is added to false negatives.
 
-    Raises:
-      ValueError: If the category ids are not 1-indexed.
-    """
-    super(ObjectDetectionEvaluator, self).__init__(categories)
-    self._num_classes = max([cat['id'] for cat in categories])
-    if min(cat['id'] for cat in categories) < 1:
-      raise ValueError('Classes should be 1-indexed.')
-    self._matching_iou_threshold = matching_iou_threshold
-    self._use_weighted_mean_ap = use_weighted_mean_ap
-    self._label_id_offset = 1
-    self._evaluate_masks = evaluate_masks
-    self._group_of_weight = group_of_weight
-    self._evaluation = ObjectDetectionEvaluation(
-        num_groundtruth_classes=self._num_classes,
-        matching_iou_threshold=self._matching_iou_threshold,
-        use_weighted_mean_ap=self._use_weighted_mean_ap,
-        label_id_offset=self._label_id_offset,
-        group_of_weight=self._group_of_weight)
-    self._image_ids = set([])
-    self._evaluate_corlocs = evaluate_corlocs
-    self._evaluate_precision_recall = evaluate_precision_recall
-    self._metric_prefix = (metric_prefix + '_') if metric_prefix else ''
-    self._expected_keys = set([
-        standard_fields.InputDataFields.key,
-        standard_fields.InputDataFields.groundtruth_boxes,
-        standard_fields.InputDataFields.groundtruth_classes,
-        standard_fields.InputDataFields.groundtruth_difficult,
-        standard_fields.InputDataFields.groundtruth_instance_masks,
-        standard_fields.DetectionResultFields.detection_boxes,
-        standard_fields.DetectionResultFields.detection_scores,
-        standard_fields.DetectionResultFields.detection_classes,
-        standard_fields.DetectionResultFields.detection_masks
-    ])
-    self._build_metric_names()
+#     Raises:
+#       ValueError: If the category ids are not 1-indexed.
+#     """
+#     super(ObjectDetectionEvaluator, self).__init__(categories)
+#     self._num_classes = max([cat['id'] for cat in categories])
+#     if min(cat['id'] for cat in categories) < 1:
+#       raise ValueError('Classes should be 1-indexed.')
+#     self._matching_iou_threshold = matching_iou_threshold
+#     self._use_weighted_mean_ap = use_weighted_mean_ap
+#     self._label_id_offset = 1
+#     self._evaluate_masks = evaluate_masks
+#     self._group_of_weight = group_of_weight
+#     self._evaluation = ObjectDetectionEvaluation(
+#         num_groundtruth_classes=self._num_classes,
+#         matching_iou_threshold=self._matching_iou_threshold,
+#         use_weighted_mean_ap=self._use_weighted_mean_ap,
+#         label_id_offset=self._label_id_offset,
+#         group_of_weight=self._group_of_weight)
+#     self._image_ids = set([])
+#     self._evaluate_corlocs = evaluate_corlocs
+#     self._evaluate_precision_recall = evaluate_precision_recall
+#     self._metric_prefix = (metric_prefix + '_') if metric_prefix else ''
+#     self._expected_keys = set([
+#         standard_fields.InputDataFields.key,
+#         standard_fields.InputDataFields.groundtruth_boxes,
+#         standard_fields.InputDataFields.groundtruth_classes,
+#         standard_fields.InputDataFields.groundtruth_difficult,
+#         standard_fields.InputDataFields.groundtruth_instance_masks,
+#         standard_fields.DetectionResultFields.detection_boxes,
+#         standard_fields.DetectionResultFields.detection_scores,
+#         standard_fields.DetectionResultFields.detection_classes,
+#         standard_fields.DetectionResultFields.detection_masks
+#     ])
+#     self._build_metric_names()
 
-  def _build_metric_names(self):
-    """Builds a list with metric names."""
+#   def _build_metric_names(self):
+#     """Builds a list with metric names."""
 
-    self._metric_names = [
-        self._metric_prefix + 'Precision/mAP@{}IOU'.format(
-            self._matching_iou_threshold)
-    ]
-    if self._evaluate_corlocs:
-      self._metric_names.append(
-          self._metric_prefix +
-          'Precision/meanCorLoc@{}IOU'.format(self._matching_iou_threshold))
+#     self._metric_names = [
+#         self._metric_prefix + 'Precision/mAP@{}IOU'.format(
+#             self._matching_iou_threshold)
+#     ]
+#     if self._evaluate_corlocs:
+#       self._metric_names.append(
+#           self._metric_prefix +
+#           'Precision/meanCorLoc@{}IOU'.format(self._matching_iou_threshold))
 
-    category_index = label_map_util.create_category_index(self._categories)
-    for idx in range(self._num_classes):
-      if idx + self._label_id_offset in category_index:
-        category_name = category_index[idx + self._label_id_offset]['name']
-        try:
-          category_name = unicode(category_name, 'utf-8')
-        except TypeError:
-          pass
-        category_name = unicodedata.normalize('NFKD', category_name).encode(
-            'ascii', 'ignore')
-        self._metric_names.append(
-            self._metric_prefix + 'PerformanceByCategory/AP@{}IOU/{}'.format(
-                self._matching_iou_threshold, category_name))
-        if self._evaluate_corlocs:
-          self._metric_names.append(
-              self._metric_prefix + 'PerformanceByCategory/CorLoc@{}IOU/{}'
-              .format(self._matching_iou_threshold, category_name))
+#     category_index = label_map_util.create_category_index(self._categories)
+#     for idx in range(self._num_classes):
+#       if idx + self._label_id_offset in category_index:
+#         category_name = category_index[idx + self._label_id_offset]['name']
+#         try:
+#           category_name = unicode(category_name, 'utf-8')
+#         except TypeError:
+#           pass
+#         category_name = unicodedata.normalize('NFKD', category_name).encode(
+#             'ascii', 'ignore')
+#         self._metric_names.append(
+#             self._metric_prefix + 'PerformanceByCategory/AP@{}IOU/{}'.format(
+#                 self._matching_iou_threshold, category_name))
+#         if self._evaluate_corlocs:
+#           self._metric_names.append(
+#               self._metric_prefix + 'PerformanceByCategory/CorLoc@{}IOU/{}'
+#               .format(self._matching_iou_threshold, category_name))
 
   def add_single_ground_truth_image_info(self, image_id, groundtruth_dict):
     """Adds groundtruth for a single image to be used for evaluation.
