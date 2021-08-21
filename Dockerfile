@@ -1,3 +1,4 @@
+
 FROM python:3.7.5-slim
 
 RUN apt-get update -y && \
@@ -6,16 +7,16 @@ RUN apt-get update -y && \
     apt-get install -y libopenblas-dev liblapack-dev && \
     apt-get install -y libx11-dev libgtk-3-dev
     
-COPY ./requirements.txt /requirements.txt
+#COPY ./requirements.txt /requirements.txt
 
-WORKDIR /
+#WORKDIR /
+
+
+#FROM python:3.6
+COPY . /app
+WORKDIR /app
 
 RUN pip3 install -r requirements.txt
-
-COPY . /
-
-EXPOSE 8080
-
-ENTRYPOINT [ "python3" ]
-
-CMD [ "clientApp.py" ]
+#RUN pip install -r requirements.txt
+ENTRYPOINT [ "python" ]
+CMD [ "app.py" ]

@@ -5,6 +5,7 @@ import shutil
 from com_in_ineuron_ai_utils.utils import decodeImage
 from research.obj import MultiClassObj
 from werkzeug.utils import secure_filename
+from wsgiref import simple_server
 
 os.putenv('LANG', 'en_US.UTF-8')
 os.putenv('LC_ALL', 'en_US.UTF-8')
@@ -45,8 +46,10 @@ def predictRoute():
     return render_template("uploaded.html")
 
 
-port = int(os.getenv("PORT"))
+
 if __name__ == "__main__":
+    port = int(os.getenv("PORT"))
     clApp = ClientApp()
-    # app.run(host='0.0.0.0', port=port)
-    app.run(host='0.0.0.0', port=port, debug=True)
+    host = '0.0.0.0'
+    httpd = simple_server.make_server(host=host,port=port, app=app)
+    httpd.serve_forever()
